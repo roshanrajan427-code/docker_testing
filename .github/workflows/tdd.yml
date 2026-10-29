@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+          cache: false
 
       - name: Run tests
         run: go test ./...
@@ -29,3 +30,21 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t docker-demo:latest .
+
+      - name: Create Docker container
+        run: docker run -d --name demo-container -p 8082:8082 docker-demo:latest
+
+      - name: Test container response
+        run: |
+          for i in {1..10}; do
+            if curl --fail http://localhost:8082/; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs demo-container
+          exit 1
+
+      - name: Remove Docker container
+        if: always()
+        run: docker rm -f demo-container || true
