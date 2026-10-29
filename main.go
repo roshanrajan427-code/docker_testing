@@ -7,7 +7,7 @@ import (
 
 func main() {
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintln(w, "Hello from Docker!")
+        fmt.Fprintln(w, "Hello from Roshan!")
     })
 
     fmt.Println("Server running on port 8082")
